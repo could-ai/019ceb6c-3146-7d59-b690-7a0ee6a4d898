@@ -6,15 +6,22 @@ class KLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFF121212),
-        border: Border.all(color: const Color(0xFF2C2C2C)),
-      ),
-      child: CustomPaint(
-        painter: _CandlestickPainter(),
-      ),
+    // 使用 LayoutBuilder 确保 CustomPaint 能够获取到明确的尺寸，防止在 Web 端渲染时尺寸为 0 导致报错
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          decoration: BoxDecoration(
+            color: const Color(0xFF121212),
+            border: Border.all(color: const Color(0xFF2C2C2C)),
+          ),
+          child: CustomPaint(
+            size: Size(constraints.maxWidth, constraints.maxHeight),
+            painter: _CandlestickPainter(),
+          ),
+        );
+      }
     );
   }
 }
@@ -22,6 +29,8 @@ class KLineChart extends StatelessWidget {
 class _CandlestickPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    if (size.width <= 0 || size.height <= 0) return;
+
     final paint = Paint()..strokeWidth = 1.5;
     final random = Random(42); // Fixed seed for consistent mock data
     

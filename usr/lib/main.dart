@@ -2,6 +2,23 @@ import 'package:flutter/material.dart';
 import 'screens/main_nav_screen.dart';
 
 void main() {
+  // 添加全局错误捕获，防止白屏，方便定位问题
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Material(
+      child: Container(
+        color: Colors.red.shade900,
+        padding: const EdgeInsets.all(20),
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Text(
+            '渲染错误:\n${details.exceptionAsString()}',
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+          ),
+        ),
+      ),
+    );
+  };
+  
   runApp(const CouldAITradingApp());
 }
 
